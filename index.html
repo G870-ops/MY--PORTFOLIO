@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goutam Gupta | System Architect v4.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --dark-space: #020205;
+            --glass-panel: rgba(10, 10, 25, 0.9);
+            --border-glow: rgba(0, 243, 255, 0.25);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--dark-space);
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- BACKGROUND LAYER --- */
+        canvas#matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 25px;
+        }
+
+        /* --- HERO SECTION --- */
+        header {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.1) 0%, transparent 75%);
+        }
+
+        .profile-img {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 25px var(--neon-blue);
+            margin-bottom: 25px;
+            object-fit: cover;
+            transition: 0.5s;
+            filter: grayscale(20%) contrast(110%);
+        }
+
+        .profile-img:hover {
+            transform: scale(1.05) rotate(3deg);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 30px var(--neon-pink);
+        }
+
+        .glitch-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            text-transform: uppercase;
+            color: var(--neon-blue);
+            text-shadow: 0 0 15px var(--neon-blue);
+            letter-spacing: 5px;
+            margin-bottom: 10px;
+        }
+
+        .typing-sub {
+            font-size: 1.4rem;
+            color: var(--neon-pink);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .neo-btn {
+            padding: 12px 30px;
+            border: 1px solid var(--neon-blue);
+            background: transparent;
+            color: var(--neon-blue);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.4s;
+            clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+        }
+
+        .neo-btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 30px var(--neon-blue);
+            transform: scale(1.05);
+        }
+
+        /* --- CONTENT SECTIONS --- */
+        section { padding: 100px 0; }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 50px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            color: var(--neon-blue);
+        }
+
+        .section-title::after {
+            content: '';
+            height: 1px;
+            flex-grow: 1;
+            background: linear-gradient(90deg, var(--neon-blue), transparent);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .glass-card {
+            background: var(--glass-panel);
+            border: 1px solid var(--border-glow);
+            padding: 35px;
+            border-radius: 4px;
+            transition: 0.4s ease;
+            position: relative;
+        }
+
+        .glass-card:hover {
+            border-color: var(--neon-pink);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.15);
+        }
+
+        .tag-row { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+
+        .tech-tag {
+            font-size: 0.75rem;
+            background: rgba(0, 243, 255, 0.1);
+            color: var(--neon-blue);
+            padding: 4px 12px;
+            border-radius: 2px;
+            border: 1px solid var(--neon-blue);
+        }
+
+        /* --- DATA TABLES --- */
+        .table-container {
+            overflow-x: auto;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-glow);
+        }
+
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        th, td { padding: 20px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { color: var(--neon-blue); text-transform: uppercase; font-size: 0.9rem; }
+
+        /* --- FOOTER & REVEAL --- */
+        .reveal { opacity: 0; transform: translateY(40px); transition: 1s all ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        footer {
+            padding: 60px 0;
+            text-align: center;
+            border-top: 1px solid var(--border-glow);
+            color: #666;
+            background: rgba(0,0,0,0.8);
+        }
+
+        @media (max-width: 768px) {
+            .glitch-text { font-size: 2.8rem; }
+            .typing-sub { font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix"></canvas>
+
+    <div class="container">
+        <header>
+            <img src="profile.jpg" alt="Goutam Gupta" class="profile-img">
+            <div class="glitch-text">Goutam Gupta</div>
+            <div class="typing-sub">Software Developer | Android & Web Architect</div>
+            <p style="margin-bottom: 35px; color: #aaa; max-width: 750px; line-height: 1.8;">
+                To make contribution in the organization with best of my ability and achieve new heights through advanced Android systems and high-fidelity AI innovation.
+            </p>
+            <div class="btn-group">
+                <a href="mailto:goutamgupta605@gmail.com" class="neo-btn">📧 Email</a>
+                <a href="tel:8343957187" class="neo-btn">📞 Call</a>
+                <a href="https://github.com/G870-ops" target="_blank" class="neo-btn">💻 GitHub</a>
+                <a href="https://www.linkedin.com/in/goutam-gupta-0b8422279?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="neo-btn">💻 LinkedIn</a>
+                <a href="https://www.facebook.com/profile.php?id=100073284108773" target="_blank" class="neo-btn">💻 Facebook</a>
+                <a href="https://x.com/GOUTAMGUPT40158" target="_blank" class="neo-btn">💻 Twitter</a>
+
+            </div>
+        </header>
+
+       <section id="projects">
+    <h2 class="section-title">CORE_DEPLOYMENTS</h2>
+    <div class="card-grid">
+        <div class="glass-card reveal">
+            <h3>PBIS App</h3>
+            <p>Real-time pig breed identification using TFLite and OpenCV with up to 100% accuracy.</p>
+            <div class="tag-row">
+                <span class="tech-tag">AI/ML</span>
+                <span class="tech-tag">TFLite</span>
+                <span class="tech-tag">OpenCV</span>
+            </div>
+        </div>
+
+        <div class="glass-card reveal">
+            <h3>Jarvis AI Assistant App</h3>
+            <p>AI-powered voice assistant for hands-free device control and real-time task automation.</p>
+            <div class="tag-row">
+                <span class="tech-tag">NLP</span>
+                <span class="tech-tag">Python</span>
+                <span class="tech-tag">Voice AI</span>
+            </div>
+        </div>
+
+        <div class="glass-card reveal">
+            <h3>Scientific Calculator App</h3>
+            <p>Java-based calculator with Aesthetic Teal and Charcoal Grey buttons for ergonomic operations.</p>
+            <div class="tag-row">
+                <span class="tech-tag">Java</span>
+                <span class="tech-tag">Android Studio</span>
+                <span class="tech-tag">UI/UX</span>
+            </div>
+        </div>
+
+        <div class="glass-card reveal">
+            <h3>Neo-Exchange App</h3>
+            <p>Advanced stock market tracker featuring live data and AI-driven sentiment analysis.</p>
+            <div class="tag-row">
+                <span class="tech-tag">Java</span>
+                <span class="tech-tag">Firebase</span>
+                <span class="tech-tag">API</span>
+            </div>
+        </div>
+
+        <div class="glass-card reveal">
+            <h3>Neo-Chess</h3>
+            <p>A high-fidelity two-player chess application built with modern web technologies.</p>
+            <div class="tag-row">
+                <span class="tech-tag">JavaScript</span>
+                <span class="tech-tag">Game Logic</span>
+            </div>
+        </div>
+
+        <div class="glass-card reveal">
+            <h3>Computer Institute App</h3> 
+            <p>Management platform for Goutam Computer Institute featuring student tracking and study modules.</p>
+            <div class="tag-row">
+                <span class="tech-tag">Firebase</span>
+                <span class="tech-tag">Java</span>
+                <span class="tech-tag">Management</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <section id="academic">
+            <h2 class="section-title">ACADEMIC_LOGS</h2>
+            <div class="table-container reveal">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Qualification</th>
+                            <th>Institute / Board</th>
+                            <th>Year</th>
+                            <th>Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>B.Tech (Information Technology)</td>
+                            <td>KGEC (MAKAUT)</td>
+                            <td>2026</td>
+                            <td>6.38 CGPA (Upto 7 Sem) </td>
+                        </tr>
+                        <tr>
+                            <td>Diploma (ETCE)</td>
+                            <td>Purulia Polytechnic</td>
+                            <td>2023</td>
+                            <td>79.9% </td>
+                        </tr>
+                        <tr>
+                            <td>Higher Secondary</td>
+                            <td>W.B.C.H.S.E</td>
+                            <td>2020</td>
+                            <td>84.4% </td>
+                        </tr>
+                        <tr>
+                            <td>Secondary</td>
+                            <td>W.B.B.S.E</td>
+                            <td>2018</td>
+                            <td>59.86% </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">SKILLS_MATRIX</h2>
+            <div class="card-grid">
+                <div class="glass-card reveal">
+                    <h3>Languages</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">C</span><span class="tech-tag">Java</span><span class="tech-tag">C++</span> 
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>Web Stack</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">React.JS</span><span class="tech-tag">JavaScript</span><span class="tech-tag">PHP</span> 
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>Data Ops</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">MySQL</span><span class="tech-tag">Data Entry</span><span class="tech-tag">Firebase</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="identity">
+            <h2 class="section-title">IDENTITY_VERIFIED</h2>
+            <div class="card-grid">
+                <div class="glass-card reveal">
+                    <p><strong>Father's Name:</strong> Nandlal Gupta </p>
+                    <p><strong>Date of Birth:</strong> 2001-12-07 </p>
+                    <p><strong>Languages:</strong> Hindi, English, Bengali </p>
+                </div>
+                <div class="glass-card reveal">
+                    <p><strong>Nationality:</strong> Indian </p>
+                    <p><strong>Marital Status:</strong> Unmarried </p>
+                    <p><strong>Location:</strong> Sanctoria Bazar, West Bengal </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© 2026 Goutam Gupta | Goutam Computer Institute Platform Lead </p>
+        <p style="font-size: 0.7rem; margin-top: 10px; letter-spacing: 3px;">SYSTEM: ONLINE | SECURE CONNECTION</p>
+    </footer>
+
+    <script>
+        // Matrix Background Effect
+        const canvas = document.getElementById('matrix');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = '01ABCDEFHIJKLMNOPRSTUVWXYZ0123456789';
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(2, 2, 5, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#00f3ff';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+
+        // Scroll Reveal Trigger
+        function reveal() {
+            const reveals = document.querySelectorAll('.reveal');
+            for (let i = 0; i < reveals.length; i++) {
+                const windowHeight = window.innerHeight;
+                const elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
+        window.addEventListener('scroll', reveal);
+        setInterval(drawMatrix, 50);
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        reveal();
+    </script>
+</body>
+</html>
