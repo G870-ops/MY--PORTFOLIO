@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Goutam Gupta | System Architect v4.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
             --neon-blue: #00f3ff;
             --neon-pink: #ff00ff;
+            --neon-green: #39ff14;
             --dark-space: #020205;
-            --glass-panel: rgba(10, 10, 25, 0.9);
+            --glass-panel: rgba(10, 10, 25, 0.85);
             --border-glow: rgba(0, 243, 255, 0.25);
+            --terminal-bg: rgba(5, 5, 12, 0.95);
         }
 
         * {
@@ -43,6 +45,134 @@
             padding: 0 25px;
         }
 
+        /* --- HIGH TECH TELEMETRY HUD BAR --- */
+        .hud-telemetry-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(2, 2, 5, 0.9);
+            border-bottom: 1px solid var(--border-glow);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: #aaa;
+            letter-spacing: 1px;
+        }
+        .telemetry-item span {
+            color: var(--neon-blue);
+            font-weight: bold;
+        }
+        .live-pulse {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background-color: var(--neon-green);
+            border-radius: 50%;
+            margin-right: 5px;
+            box-shadow: 0 0 8px var(--neon-green);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        /* --- MATRIX UTILITIES CONTROLLER --- */
+        .matrix-controller {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: var(--glass-panel);
+            border: 1px solid var(--border-glow);
+            padding: 12px;
+            border-radius: 4px;
+            z-index: 99;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+        }
+        .matrix-controller h4 { margin-bottom: 8px; color: var(--neon-blue); text-transform: uppercase;}
+        .control-btn {
+            background: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 3px 8px;
+            font-size: 0.65rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-right: 4px;
+        }
+        .control-btn:hover {
+            background: var(--neon-blue);
+            color: #000;
+        }
+
+        /* --- INTERACTIVE FLOATING TERMINAL SYSTEM --- */
+        .terminal-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .terminal-window {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 380px;
+            height: 450px;
+            background: var(--terminal-bg);
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+            border-radius: 6px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            transform: scale(0);
+            transform-origin: bottom right;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .terminal-window.active { transform: scale(1); }
+        .terminal-header {
+            background: rgba(255, 0, 255, 0.1);
+            padding: 8px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 0, 255, 0.2);
+            color: var(--neon-pink);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .terminal-body {
+            flex-grow: 1;
+            padding: 12px;
+            overflow-y: auto;
+            color: #00ff66;
+            line-height: 1.4;
+        }
+        .terminal-input-row {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: #000;
+        }
+        .terminal-prompt { color: var(--neon-blue); margin-right: 5px; }
+        .terminal-input {
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            outline: none;
+            flex-grow: 1;
+        }
+
         /* --- HERO SECTION --- */
         header {
             height: 100vh;
@@ -52,6 +182,7 @@
             align-items: center;
             text-align: center;
             background: radial-gradient(circle, rgba(0, 243, 255, 0.1) 0%, transparent 75%);
+            padding-top: 40px;
         }
 
         .profile-img {
@@ -149,6 +280,39 @@
             border-radius: 4px;
             transition: 0.4s ease;
             position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: 'SYS_METRICS_OK';
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem;
+            color: var(--neon-green);
+            opacity: 0.4;
+        }
+
+        /* Hidden Engineering Insight Metrics Tooltip On Hover */
+        .glass-card .tech-telemetry-insight {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.65rem;
+            color: #888;
+            border-top: 1px dashed rgba(0, 243, 255, 0.2);
+            margin-top: 0;
+            padding-top: 0;
+        }
+
+        .glass-card:hover .tech-telemetry-insight {
+            max-height: 80px;
+            opacity: 1;
+            margin-top: 15px;
+            padding-top: 10px;
         }
 
         .glass-card:hover {
@@ -179,6 +343,41 @@
         th, td { padding: 20px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
         th { color: var(--neon-blue); text-transform: uppercase; font-size: 0.9rem; }
 
+        /* --- BIOMETRIC SIMULATION DESIGN WIDGET --- */
+        .biometric-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(0,0,0,0.4);
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px dashed var(--border-glow);
+            margin-top: 20px;
+        }
+        .bio-scanner {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--neon-green);
+            position: relative;
+            cursor: pointer;
+            background: radial-gradient(circle, rgba(57,255,20,0.1) 0%, transparent 80%);
+        }
+        .bio-scanner::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--neon-green);
+            top: 0;
+            box-shadow: 0 0 8px var(--neon-green);
+            animation: scan 2s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+
         /* --- FOOTER & REVEAL --- */
         .reveal { opacity: 0; transform: translateY(40px); transition: 1s all ease; }
         .reveal.active { opacity: 1; transform: translateY(0); }
@@ -194,10 +393,47 @@
         @media (max-width: 768px) {
             .glitch-text { font-size: 2.8rem; }
             .typing-sub { font-size: 1.1rem; }
+            .matrix-controller { display: none; }
+            .terminal-window { width: calc(100% - 40px); }
         }
     </style>
 </head>
 <body>
+
+    <div class="hud-telemetry-bar">
+        <div class="telemetry-item"><div class="live-pulse"></div> HOST SYSTEM: <span>MAKAUT_NODE.04</span></div>
+        <div class="telemetry-item">MEM_ALLOC: <span id="telemetry-mem">14.22 GB</span></div>
+        <div class="telemetry-item">LATENCY: <span id="telemetry-latency">24ms</span></div>
+        <div class="telemetry-item">ARCH_VER: <span>4.0.0-PROD</span></div>
+    </div>
+
+    <div class="matrix-controller">
+        <h4>Matrix Core Engine</h4>
+        <button class="control-btn" onclick="adjustMatrix('#00f3ff')">Cyan</button>
+        <button class="control-btn" onclick="adjustMatrix('#ff00ff')">Pink</button>
+        <button class="control-btn" onclick="adjustMatrix('#39ff14')">Green</button>
+        <button class="control-btn" onclick="scrambleMatrix()">Scramble</button>
+    </div>
+
+    <div class="terminal-toggle">
+        <button class="neo-btn" style="padding: 8px 15px; font-size: 0.75rem;" onclick="toggleTerminal()">⚡ Open Console Terminal</button>
+    </div>
+
+    <div class="terminal-window" id="terminalConsole">
+        <div class="terminal-header">
+            <span>CORE_SYSTEM_SHELL v4.0</span>
+            <span style="cursor:pointer;" onclick="toggleTerminal()">[X]</span>
+        </div>
+        <div class="terminal-body" id="terminalOutput">
+            <div>&gt; Initializing diagnostics connection...</div>
+            <div>&gt; Authorization Status: GUEST_MODE. Verified secure.</div>
+            <div>&gt; Type 'help' to audit system capabilities, 'skills', 'projects', 'achievements', or 'clear'.</div>
+        </div>
+        <div class="terminal-input-row">
+            <span class="terminal-prompt">goutam@root:~$</span>
+            <input type="text" class="terminal-input" id="terminalCommand" onkeydown="handleTerminalCommand(event)" placeholder="Enter diagnostic query...">
+        </div>
+    </div>
 
     <canvas id="matrix"></canvas>
 
@@ -205,84 +441,248 @@
         <header>
             <img src="profile.jpg" alt="Goutam Gupta" class="profile-img">
             <div class="glitch-text">Goutam Gupta</div>
-            <div class="typing-sub">Software Developer | Android & Web Architect</div>
+            <div class="typing-sub">Full Stack Developer | Android App Developer</div>
             <p style="margin-bottom: 35px; color: #aaa; max-width: 750px; line-height: 1.8;">
-                To make contribution in the organization with best of my ability and achieve new heights through advanced Android systems and high-fidelity AI innovation.
+                To make a meaningful contribution to the organization with the best of my ability and also to develop new skills during the interaction to achieve new heights.
             </p>
             <div class="btn-group">
                 <a href="mailto:goutamgupta605@gmail.com" class="neo-btn">📧 Email</a>
                 <a href="tel:8343957187" class="neo-btn">📞 Call</a>
-                <a href="https://github.com/G870-ops" target="_blank" class="neo-btn">💻 GitHub</a>
-                <a href="https://www.linkedin.com/in/goutam-gupta-0b8422279?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" class="neo-btn">💻 LinkedIn</a>
-                <a href="https://www.facebook.com/profile.php?id=100073284108773" target="_blank" class="neo-btn">💻 Facebook</a>
-                <a href="https://x.com/GOUTAMGUPT40158" target="_blank" class="neo-btn">💻 Twitter</a>
-
+                <a href="https://github.com/G870ops" target="_blank" class="neo-btn">💻 GitHub</a>
+                <a href="https://www.linkedin.com/in/goutam-gupta" target="_blank" class="neo-btn">💻 LinkedIn</a>
             </div>
         </header>
 
-       <section id="projects">
-    <h2 class="section-title">CORE_DEPLOYMENTS</h2>
-    <div class="card-grid">
-        <div class="glass-card reveal">
-            <h3>PBIS App</h3>
-            <p>Real-time pig breed identification using TFLite and OpenCV with up to 100% accuracy.</p>
-            <div class="tag-row">
-                <span class="tech-tag">AI/ML</span>
-                <span class="tech-tag">TFLite</span>
-                <span class="tech-tag">OpenCV</span>
-            </div>
-        </div>
+        <section id="projects">
+            <h2 class="section-title">CORE_DEPLOYMENTS</h2>
+            <div class="card-grid">
+                <div class="glass-card reveal">
+                    <h3>Invitor (Event Booking) Web App</h3>
+                    <p>Full-stack Event Booking Management web platform featuring dynamic role-based dashboards and cross-layered API logic.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">React.js</span>
+                        <span class="tech-tag">Vite</span>
+                        <span class="tech-tag">Tailwind CSS</span>
+                        <span class="tech-tag">Postman APIs</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ PIPELINE: React + Vite Execution Core <br>
+                        🧠 INTERFACE: Tailwind Utility Classes <br>
+                        🎯 TEST_HARNESS: Postman Automated Collection API
+                    </div>
+                </div>
 
-        <div class="glass-card reveal">
-            <h3>Jarvis AI Assistant App</h3>
-            <p>AI-powered voice assistant for hands-free device control and real-time task automation.</p>
-            <div class="tag-row">
-                <span class="tech-tag">NLP</span>
-                <span class="tech-tag">Python</span>
-                <span class="tech-tag">Voice AI</span>
-            </div>
-        </div>
+                <div class="glass-card reveal">
+                    <h3>PBIS App</h3>
+                    <p>Real-time pig breed identification using TFLite and OpenCV with up to 100% accuracy.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">AI/ML</span>
+                        <span class="tech-tag">TFLite</span>
+                        <span class="tech-tag">OpenCV</span>
+                        <span class="tech-tag">Android Studio</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ INFERENCE_SPEED: ~45ms <br>
+                        🧠 MODEL_COMPRESSION: INT8 Quantized <br>
+                        🎯 RECOGNITION_RATE: 100% Classification Bound
+                    </div>
+                </div>
 
-        <div class="glass-card reveal">
-            <h3>Scientific Calculator App</h3>
-            <p>Java-based calculator with Aesthetic Teal and Charcoal Grey buttons for ergonomic operations.</p>
-            <div class="tag-row">
-                <span class="tech-tag">Java</span>
-                <span class="tech-tag">Android Studio</span>
-                <span class="tech-tag">UI/UX</span>
-            </div>
-        </div>
+                <div class="glass-card reveal">
+                    <h3>Jarvis AI Assistant App</h3>
+                    <p>AI-powered voice assistant for hands-free device control and real-time task automation.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">NLP</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Voice AI</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ PIPELINE: Async Subprocesses <br>
+                        🧠 RECOGNITION: Offline STT Engines <br>
+                        🎯 AUTOMATION: Android Intent Mapping
+                    </div>
+                </div>
 
-        <div class="glass-card reveal">
-            <h3>Neo-Exchange App</h3>
-            <p>Advanced stock market tracker featuring live data and AI-driven sentiment analysis.</p>
-            <div class="tag-row">
-                <span class="tech-tag">Java</span>
-                <span class="tech-tag">Firebase</span>
-                <span class="tech-tag">API</span>
-            </div>
-        </div>
+                <div class="glass-card reveal">
+                    <h3>Chess Game App</h3>
+                    <p>A high-fidelity tactical two-player chess simulation built with native web execution layers.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">Game Logic</span>
+                        <span class="tech-tag">DOM Manipulation</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ MATRIX_STATE: Dynamic Board Grid Array <br>
+                        🧠 COMPLEXITY: Strict Move Rules Matrix <br>
+                        🎯 RESPONSIVENESS: 0ms Interactive Input Lag
+                    </div>
+                </div>
 
-        <div class="glass-card reveal">
-            <h3>Neo-Chess</h3>
-            <p>A high-fidelity two-player chess application built with modern web technologies.</p>
-            <div class="tag-row">
-                <span class="tech-tag">JavaScript</span>
-                <span class="tech-tag">Game Logic</span>
-            </div>
-        </div>
+                <div class="glass-card reveal">
+                    <h3>Computer Institute App</h3> 
+                    <p>Comprehensive Android management platform for Goutam Computer Institute featuring tracking and interactive modules.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">Android UI</span>
+                        <span class="tech-tag">JAVA</span>
+                        <span class="tech-tag">Digital Management</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ ARCHITECTURE: Native Android Layouts <br>
+                        🧠 DATA_FLOW: Progress Metrics Stream <br>
+                        🎯 SYSTEMS: Core Module Enrolment Engine
+                    </div>
+                </div>
 
-        <div class="glass-card reveal">
-            <h3>Computer Institute App</h3> 
-            <p>Management platform for Goutam Computer Institute featuring student tracking and study modules.</p>
-            <div class="tag-row">
-                <span class="tech-tag">Firebase</span>
-                <span class="tech-tag">Java</span>
-                <span class="tech-tag">Management</span>
+                <div class="glass-card reveal">
+                    <h3>FlatBookingApp (StudentStay)</h3>
+                    <p>A housing accommodation platform featuring dual role-based access architectures for landlords and students.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">Android Studio</span>
+                        <span class="tech-tag">Firebase Auth</span>
+                        <span class="tech-tag">Kotlin</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ AUTH_LATENCY: ~12ms sync <br>
+                        🧠 STATE_VISIBILITY: Dynamic Main Thread Logic <br>
+                        🎯 ROUTING: Role-Based Native Gateways
+                    </div>
+                </div>
+
+                <div class="glass-card reveal">
+                    <h3>Neo-Task Manager</h3>
+                    <p>Full-stack productivity workspace organizing enterprise project workflows with real-time tracking metrics.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">React.js</span>
+                        <span class="tech-tag">Spring Boot</span>
+                        <span class="tech-tag">MySQL</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ REST_PIPELINE: Non-blocking I/O <br>
+                        🧠 PERSISTENCE: Relational Schema Mapping <br>
+                        🎯 FRONTEND_BUILD: High-Velocity Vite Bundler
+                    </div>
+                </div>
+
+                <div class="glass-card reveal">
+                    <h3>Scientific Calculator App</h3>
+                    <p>Java-based calculator with Aesthetic Teal and Charcoal Grey buttons for ergonomic operations.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">Java</span>
+                        <span class="tech-tag">Android Studio</span>
+                        <span class="tech-tag">UI/UX</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ PARSER: Shunting-yard Engine Algorithm <br>
+                        🧠 MEMORY_FOOTPRINT: &lt;12MB RAM <br>
+                        🎯 RENDER_CYCLE: 60 FPS Native View Architecture
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
+
+        <section id="skills">
+            <h2 class="section-title">SKILLS_MATRIX</h2>
+            <div class="card-grid">
+                <div class="glass-card reveal">
+                    <h3>Programming Languages</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">C</span>
+                        <span class="tech-tag">JAVA</span>
+                        <span class="tech-tag">C++</span>
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>Frontend Engineering</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">HTML</span>
+                        <span class="tech-tag">CSS</span>
+                        <span class="tech-tag">JavaScript</span>
+                        <span class="tech-tag">React.js</span>
+                        <span class="tech-tag">Tailwind CSS</span>
+                        <span class="tech-tag">Bootstrap</span>
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>Backend Ecosystem</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">MERN Stack</span>
+                        <span class="tech-tag">Node.js</span>
+                        <span class="tech-tag">Express.js</span>
+                        <span class="tech-tag">PHP</span>
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>Database Management</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">MYSQL</span>
+                        <span class="tech-tag">MongoDB</span>
+                        <span class="tech-tag">Firebase</span>
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>Tools & Core Skills</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">TypeScript</span>
+                        <span class="tech-tag">Problem Solving</span>
+                        <span class="tech-tag">Git</span>
+                        <span class="tech-tag">GitHub</span>
+                        <span class="tech-tag">REST APIs</span>
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>Other Qualifications</h3>
+                    <div class="tag-row">
+                        <span class="tech-tag">Domestic Data Entry Operator</span>
+                        <span class="tech-tag">Database Maintenance</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="achievements">
+            <h2 class="section-title">MISSION_ACCOMPLISHMENTS</h2>
+            <div class="card-grid">
+                <div class="glass-card reveal">
+                    <h3>Robo Fight Competition</h3>
+                    <p>Secured 3rd Position representing Purulia Polytechnic in a high-intensity tactical robotics engineering matchup.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">Robotics</span>
+                        <span class="tech-tag">Hardware Combat</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ PLACEMENT: Tier-3 Podium <br>
+                        🧠 ORIGIN_NODE: Purulia Polytechnic <br>
+                        🎯 STATUS: Verified Victory Medal
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>WBJELET Examination</h3>
+                    <p>Achieved elite status placement in the state engineering evaluation matrices.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">General Rank: 170</span>
+                        <span class="tech-tag">OBC Rank: 26</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ EFFICIENCY: Top Percentile Node <br>
+                        🧠 CATEGORY_MATRIX: Tier-1 Performance Metrics <br>
+                        🎯 ROUTING: Gateway to Premium Institutes
+                    </div>
+                </div>
+                <div class="glass-card reveal">
+                    <h3>Udemy Professional Certification</h3>
+                    <p>Successfully audited and acquired mastery credentials for full comprehensive systems framework deployment.</p>
+                    <div class="tag-row">
+                        <span class="tech-tag">CSS & Bootstrap Stack</span>
+                        <span class="tech-tag">JavaScript & PHP Complete</span>
+                    </div>
+                    <div class="tech-telemetry-insight">
+                        ⚡ COMPLIANCE: 100% Curriculum Sync <br>
+                        🧠 CONTEXT: Full Stack Integration Frameworks <br>
+                        🎯 ARCH: End-to-End Enterprise Development
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <section id="academic">
             <h2 class="section-title">ACADEMIC_LOGS</h2>
@@ -298,55 +698,31 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>B.Tech (Information Technology)</td>
-                            <td>KGEC (MAKAUT)</td>
+                            <td>B. Tech in Information Technology</td>
+                            <td>KGEC (M.A.K.A.U.T)</td>
                             <td>2026</td>
-                            <td>6.38 CGPA (Upto 7 Sem) </td>
+                            <td>6.38 CGPA (Up to 7 Sem)</td>
                         </tr>
                         <tr>
-                            <td>Diploma (ETCE)</td>
-                            <td>Purulia Polytechnic</td>
+                            <td>Diploma in ETCE</td>
+                            <td>Purulia Polytechnic (W.B.S.C.T.E)</td>
                             <td>2023</td>
-                            <td>79.9% </td>
+                            <td>79.9%</td>
                         </tr>
                         <tr>
                             <td>Higher Secondary</td>
-                            <td>W.B.C.H.S.E</td>
+                            <td>Sodepur Colliery High School (W.B.C.H.S.E)</td>
                             <td>2020</td>
-                            <td>84.4% </td>
+                            <td>84.4%</td>
                         </tr>
                         <tr>
-                            <td>Secondary</td>
-                            <td>W.B.B.S.E</td>
+                            <td>Secondary Education</td>
+                            <td>Sodepur Colliery High School (W.B.B.S.E)</td>
                             <td>2018</td>
-                            <td>59.86% </td>
+                            <td>59.86%</td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-        </section>
-
-        <section id="skills">
-            <h2 class="section-title">SKILLS_MATRIX</h2>
-            <div class="card-grid">
-                <div class="glass-card reveal">
-                    <h3>Languages</h3>
-                    <div class="tag-row">
-                        <span class="tech-tag">C</span><span class="tech-tag">Java</span><span class="tech-tag">C++</span> 
-                    </div>
-                </div>
-                <div class="glass-card reveal">
-                    <h3>Web Stack</h3>
-                    <div class="tag-row">
-                        <span class="tech-tag">React.JS</span><span class="tech-tag">JavaScript</span><span class="tech-tag">PHP</span> 
-                    </div>
-                </div>
-                <div class="glass-card reveal">
-                    <h3>Data Ops</h3>
-                    <div class="tag-row">
-                        <span class="tech-tag">MySQL</span><span class="tech-tag">Data Entry</span><span class="tech-tag">Firebase</span>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -354,21 +730,29 @@
             <h2 class="section-title">IDENTITY_VERIFIED</h2>
             <div class="card-grid">
                 <div class="glass-card reveal">
-                    <p><strong>Father's Name:</strong> Nandlal Gupta </p>
-                    <p><strong>Date of Birth:</strong> 2001-12-07 </p>
-                    <p><strong>Languages:</strong> Hindi, English, Bengali </p>
+                    <p><strong>Father's Name:</strong> Nandlal Gupta</p>
+                    <p><strong>Date of Birth:</strong> 2001-12-07</p>
+                    <p><strong>Languages:</strong> Hindi, English, Bengali</p>
                 </div>
                 <div class="glass-card reveal">
-                    <p><strong>Nationality:</strong> Indian </p>
-                    <p><strong>Marital Status:</strong> Unmarried </p>
-                    <p><strong>Location:</strong> Sanctoria Bazar, West Bengal </p>
+                    <p><strong>Nationality:</strong> Indian</p>
+                    <p><strong>Marital Status:</strong> Unmarried</p>
+                    <p><strong>Location Location:</strong> Sanctoria Bazar, West Bengal</p>
+                     
+                    <div class="biometric-container">
+                        <div class="bio-scanner" onclick="simulateBioScan()"></div>
+                        <div style="font-size: 0.75rem; font-family: 'Orbitron';">
+                            STATUS: <span id="bio-status" style="color:var(--neon-green)">SECURED_PASS</span><br>
+                            <span style="color:#666; font-size:0.65rem;">Click grid pad to re-verify identity hash token</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
     </div>
 
     <footer>
-        <p>© 2026 Goutam Gupta | Goutam Computer Institute Platform Lead </p>
+        <p>© 2026 Goutam Gupta | Goutam Computer Institute Platform Lead</p>
         <p style="font-size: 0.7rem; margin-top: 10px; letter-spacing: 3px;">SYSTEM: ONLINE | SECURE CONNECTION</p>
     </footer>
 
@@ -379,15 +763,16 @@
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        const chars = '01ABCDEFHIJKLMNOPRSTUVWXYZ0123456789';
+        let chars = '01ABCDEFHIJKLMNOPRSTUVWXYZ0123456789';
         const fontSize = 16;
         const columns = canvas.width / fontSize;
         const drops = Array(Math.floor(columns)).fill(1);
+        let matrixColor = '#00f3ff'; // Default Cyan
 
         function drawMatrix() {
             ctx.fillStyle = 'rgba(2, 2, 5, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.fillStyle = '#00f3ff';
+            ctx.fillStyle = matrixColor;
             ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < drops.length; i++) {
@@ -417,6 +802,71 @@
             canvas.height = window.innerHeight;
         });
         reveal();
+         
+        // Matrix customizer handlers
+        function adjustMatrix(color) {
+            matrixColor = color;
+        }
+        function scrambleMatrix() {
+            chars = (chars === '01ABCDEFHIJKLMNOPRSTUVWXYZ0123456789') ? '☠☣𝝨𝝮𝝯𝝰𝝱𝝲𝝳𝝴𝝵𝝶𝝷𝝸𝝹𝝺𝝻' : '01ABCDEFHIJKLMNOPRSTUVWXYZ0123456789';
+        }
+
+        // Live Telemetry simulation loop
+        setInterval(() => {
+            document.getElementById('telemetry-mem').innerText = (12 + Math.random() * 3).toFixed(2) + " GB";
+            document.getElementById('telemetry-latency').innerText = Math.floor(15 + Math.random() * 15) + "ms";
+        }, 2500);
+
+        // Biometric Simulation Trigger
+        function simulateBioScan() {
+            const statusNode = document.getElementById('bio-status');
+            statusNode.innerText = "SCANNING_HASH...";
+            statusNode.style.color = "yellow";
+            setTimeout(() => {
+                statusNode.innerText = "VERIFIED_GOUTAM_GUPTA_";
+                statusNode.style.color = "var(--neon-green)";
+            }, 1200);
+        }
+
+        // Interactive HUD Terminal Core Operations
+        function toggleTerminal() {
+            const term = document.getElementById('terminalConsole');
+            term.classList.toggle('active');
+        }
+
+        function handleTerminalCommand(e) {
+            if (e.key === 'Enter') {
+                const inputElement = document.getElementById('terminalCommand');
+                const cmd = inputElement.value.trim().toLowerCase();
+                const output = document.getElementById('terminalOutput');
+                
+                let response = `<div>&gt; ${inputElement.value}</div>`;
+                
+                if (cmd === 'help') {
+                    response += `<div style="color:#aaa;">Commands: 'about', 'skills', 'projects', 'achievements', 'academic', 'clear'</div>`;
+                } else if (cmd === 'about') {
+                    response += `<div>Goutam Gupta - Full Stack MERN & Android Developer. Systems architecture specialist focused on interactive digital frameworks.</div>`;
+                } else if (cmd === 'skills') {
+                    response += `<div>Languages: C, JAVA, C++, TypeScript, JavaScript | Frontend Frameworks & Tools: HTML, CSS, React.js, Tailwind CSS, Bootstrap | Backend & Databases: Node.js, Express.js, MySQL, MongoDB, Firebase | Tools & Technologies & Concepts: Git, Github, REST APIs , Postman API Testing , Problem Solving .</div>`;
+                } else if (cmd === 'projects') {
+                    response += `<div>Active Deployments: Invitor Web App, PBIS TFLite App, Jarvis Voice AI, Chess Game Engine, Computer Institute App, FlatBookingApp, Neo-Task Workspace.</div>`;
+                } else if (cmd === 'achievements') {
+                    response += `<div>System Milestones: Robo Fight (3rd Position - Purulia Polytechnic) | WBJELET Matrix (General Rank: 170, OBC Rank: 26) | Udemy Full Stack Verification.</div>`;
+                } else if (cmd === 'academic') {
+                    response += `<div>B.Tech IT (KGEC 2026: 6.38 CGPA) | Diploma ETCE (2023: 79.9%) | HS (2020: 84.4%)</div>`;
+                } else if (cmd === 'clear') {
+                    output.innerHTML = '';
+                    inputElement.value = '';
+                    return;
+                } else {
+                    response += `<div style="color:red;">Command Execution Error: Unknown structural node context. Type 'help'.</div>`;
+                }
+                
+                output.innerHTML += response;
+                output.scrollTop = output.scrollHeight;
+                inputElement.value = '';
+            }
+        }
     </script>
 </body>
 </html>
