@@ -99,7 +99,7 @@
 
 | Qualification | Institute / Board | Year | Score |
 | :--- | :--- | :--- | :--- |
-| **B. Tech in Information Technology** | KGEC (M.A.K.A.U.T) | 2026 | 6.55 CGPA (Up to 8 Sem) |
+| **B. Tech in Information Technology** | KGEC (M.A.K.A.U.T) | 2026 | 6.61 CGPA  |
 | **Diploma in ETCE** | Purulia Polytechnic (W.B.S.C.T.E) | 2023 | 79.9% |
 | **Higher Secondary** | Sodepur Colliery High School (W.B.C.H.S.E) | 2020 | 84.4% |
 | **Secondary Education** | Sodepur Colliery High School (W.B.B.S.E) | 2018 | 59.86% |
